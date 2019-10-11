@@ -12,4 +12,8 @@ describe DockingStation do
   it "DockingStation responds to release_bike" do
     expect(@docking_station).to respond_to(:release_bike)
   end
+
+  it "DockingStation can release a bike" do
+    expect(@docking_station.release_bike).to be_truthy
+  end
 end
