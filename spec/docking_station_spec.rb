@@ -22,7 +22,7 @@ describe DockingStation do
   it "release_bike returns error if @bikes is empty" do
     @docking_station.dock_bike(Bike.new)
     @docking_station.release_bike
-    expect{@docking_station.release_bike}.to raise_error("No Bikes Available")
+    expect { @docking_station.release_bike }.to raise_error("No Bikes Available")
   end
 
   it "DockingStation responds to dock_bike" do
@@ -36,8 +36,8 @@ describe DockingStation do
   end
 
   it "rejects bike docking if capacity full" do
-    DockingStation::DEFAULT_CAPACITY.times {@docking_station.dock_bike(Bike.new)}
-    expect{@docking_station.dock_bike(Bike.new)}.to raise_error("No space available")
+    DockingStation::DEFAULT_CAPACITY.times { @docking_station.dock_bike(Bike.new) }
+    expect { @docking_station.dock_bike(Bike.new) }.to raise_error("No space available")
   end
 
   it "sets default capacity to DEFAULT_CAPACITY if no parameters are passed to DockingStation.new" do
@@ -48,12 +48,14 @@ describe DockingStation do
   it "should report bike broken when I return it" do
     bike = Bike.new
     @docking_station.dock_bike(bike, true)
-    expect(bike.working?).to be_falsey
+    expect(bike.working?).to be false
   end
 
+  let(:bike) { double :bike }
   it "does not release a broken bike" do
-    bike = Bike.new
-    @docking_station.dock_bike(bike, true)
-    expect{@docking_station.release_bike}.to raise_error("No Working Bikes Available")
+    # bike = Bike.new
+    allow(bike).to receive(:working?).and_return(false)
+    subject.dock_bike(bike)
+    expect { subject.release_bike }.to raise_error("No Working Bikes Available")
   end
 end
